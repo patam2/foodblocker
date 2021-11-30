@@ -27,28 +27,37 @@ class Selver:
             if req['hits']['total']['value'] == 0:
                 continue
             for raw_product_data in req['hits']['hits']:                
-                output[raw_product_data['_source']['id']] = raw_product_data['_source']['url_path']
+                output[str(raw_product_data['_source']['id'])] = raw_product_data['_source']['url_path']
         return output
 
-    def get_incrediens_by_category(self, catid: str) -> dict:
+    def get_incrediens_by_category(self, catid: str, page = 0, output = []) -> list:
         """
         Võtab vastu selveri kategooria numbri, annab tagasi tooted ja nende allergeenid, koostisosad,
-        dict {
-            product_url {
-                incrediens: str
-                allergens: str
-            }
-        }
+        [{
+            product_url: str,
+            incrediens: str,
+            allergens: str
+        }, ... ]
         """
-        product_query = open(fr'{os.getcwd()}\epoe_moodulid\selver_page_get_query.txt', 'r').read().replace('PRODUCTID', catid)
+        product_query = open(fr'{os.getcwd()}\epoe_moodulid\selver_page_get_query.txt', 'r').read().replace('PRODUCTID', catid) # TOdo : in __init__
 
-        page, remaining, output = 0, 0, defaultdict(dict)
+        if page > 0:
+            product_query = product_query.replace(f'from=0', f'from={page*96}') # Regex ? ?? ??? ??
 
         req = self.session.get(product_query).json()
+        hits = req['hits']['total']['value']
+
         for raw_product_data in req['hits']['hits']:
-            url_path = raw_product_data['_source']['url_path']
+            to_add = {}
+            to_add['url_path'] = raw_product_data['_source']['url_path']
             if 'product_ingrediens' in raw_product_data['_source']:
-                output[url_path]['ingrediens'] = raw_product_data['_source']['product_ingrediens']
+                to_add['ingrediens'] = raw_product_data['_source']['product_ingrediens']
             if 'product_allergens' in raw_product_data['_source']:
-                output[url_path]['allergens'] = raw_product_data['_source']['product_allergens']
+                to_add['allergens'] = raw_product_data['_source']['product_allergens']
+            output.append(to_add)
+
+        if hits - (page +1) * 96 > 0:
+            return self.get_incrediens_by_category(catid, page + 1, output)
+        
         return output
+
