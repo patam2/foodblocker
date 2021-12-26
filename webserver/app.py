@@ -18,7 +18,8 @@ def landing(): #POST {'urls':[''], 'forbidden': ['']}
         result = mongo_client.find_one({'url_path': url})
 
         for ingredient in request.json['forbidden']:
-            if ingredient in result['ingrediens']:
+            if (ingredient in result['ingrediens'] 
+                    or ingredient in result['allergens']):
                 out[url].append(ingredient)
 
     return jsonify(out)
