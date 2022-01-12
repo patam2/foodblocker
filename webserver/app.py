@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 
-
 MONGODB_IP = '127.0.0.1'
 MONGODB_PORT = 27017 #TODO: env
 
@@ -13,15 +12,25 @@ flask_client = Flask(__name__)
 def landing(): #POST {'urls':[''], 'forbidden': ['']}
     out = {}
 
-    for url in request.json['urls']:
-        out[url] = []
-        result = mongo_client.find_one({'url_path': url})
+    for enum, url in enumerate(request.json['urls']):
+        if url.startswith('https'):
+            url = url.split('/')[-1]
 
+        out[enum] = []
+        result = mongo_client.find_one({'url_path': url})
         for ingredient in request.json['forbidden']:
             if (ingredient in result['ingrediens'] 
                     or ingredient in result['allergens']):
-                out[url].append(ingredient)
+                out[enum].append(ingredient)
 
-    return jsonify(out)
+    print(out)
+    resp = jsonify(out)
+    return resp
+
+@flask_client.after_request
+def apply_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = '*'
+    return response
 
 flask_client.run()

@@ -1,0 +1,24 @@
+{
+    "name": "Toidublokeerija",
+    "description": "Base Level Extension",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": "icon"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://www.selver.ee/cart"],
+        "js": ["jquery-3.6.0.js", "worker.js"],
+        "css": ["filter.css"],
+        "run_at": "document_idle"
+      }
+    ],
+    "permissions": [
+      "activeTab"
+    ],
+    "host_permissions": [
+      "https://www.selver.ee/cart"
+    ]
+}

@@ -42,18 +42,18 @@ class Selver:
         product_query = open(fr'{os.getcwd()}\epoe_moodulid\selver_page_get_query.txt', 'r').read().replace('PRODUCTID', catid) # TOdo : in __init__
 
         if page > 0:
-            product_query = product_query.replace(f'from=0', f'from={page*96}') # Regex ? ?? ??? ??
+            product_query = product_query.replace(f'from=0', f'from={page*96}')
 
         req = self.session.get(product_query).json()
         hits = req['hits']['total']['value']
 
         for raw_product_data in req['hits']['hits']:
-            to_add = {}
+            to_add = {'allergens': '', 'ingrediens': ''}
             to_add['url_path'] = raw_product_data['_source']['url_path']
             if 'product_ingrediens' in raw_product_data['_source']:
-                to_add['ingrediens'] = raw_product_data['_source']['product_ingrediens']
+                to_add['ingrediens'] = raw_product_data['_source']['product_ingrediens'].lower()
             if 'product_allergens' in raw_product_data['_source']:
-                to_add['allergens'] = raw_product_data['_source']['product_allergens']
+                to_add['allergens'] = raw_product_data['_source']['product_allergens'].lower()
             output.append(to_add)
 
         if hits - (page +1) * 96 > 0:

@@ -29,15 +29,21 @@ def format_ingrediens(raw: str) -> list:
 
 
 for cat_id, cat_name in selver_client.get_product_categories().items():
-    gathered_incrediens = selver_client.get_incrediens_by_category(
-        cat_id, 
-        output = []
-    ) 
-    
+    try:
+        gathered_incrediens = selver_client.get_incrediens_by_category(
+            cat_id, 
+            output = []
+        ) 
+    except:
+        continue
+
     if gathered_incrediens == []:
         continue
     
-    status = selver_db.insert_many(
-        gathered_incrediens
-    )
-    print(cat_id, len(status.inserted_ids), 'added') 
+    try:
+        status = selver_db.insert_many(
+            gathered_incrediens
+        )
+        print(cat_id, len(status.inserted_ids), 'added') 
+    except:
+        pass
