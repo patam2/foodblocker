@@ -11,6 +11,10 @@ import requests
 class Selver:
     def __init__(self) -> None:
         self.session = requests.Session()
+        self.product_query = open(
+            fr'{os.getcwd()}\epoe_moodulid\selver_page_get_query.txt', \
+                'r'
+        ).read()
 
     def get_product_categories(self) -> dict:
         """
@@ -39,7 +43,7 @@ class Selver:
             allergens: str
         }, ... ]
         """
-        product_query = open(fr'{os.getcwd()}\epoe_moodulid\selver_page_get_query.txt', 'r').read().replace('PRODUCTID', catid) # TOdo : in __init__
+        product_query = self.product_query.replace('PRODUCTID', catid)
 
         if page > 0:
             product_query = product_query.replace(f'from=0', f'from={page*96}')
