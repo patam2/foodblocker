@@ -12,7 +12,7 @@ class Selver:
     def __init__(self) -> None:
         self.session = requests.Session()
         self.product_query = open(
-            fr'{os.getcwd()}\epoe_moodulid\selver_page_get_query.txt', \
+            fr'{os.getcwd()}\epoe_moodulid\selver_page_get_query.txt',
                 'r'
         ).read()
 
