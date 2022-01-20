@@ -15,7 +15,7 @@ function runCartFilter (htmlentity) {
             }, null, '\t'),
             contentType: 'application/json',
             success: function(result) {
-                for (const [key, value] of Object.entries(result)) {
+                for ([key, value] of Object.entries(result)) {
                     if (value.length > 0 && htmlentity[key] != undefined) {
                         htmlentity[key].classList.add("extension-blocked")
                     }
