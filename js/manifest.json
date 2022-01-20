@@ -9,16 +9,15 @@
     },
     "content_scripts": [
       {
-        "matches": ["https://www.selver.ee/cart"],
+        "matches": ["*://*.selver.ee/*"],
         "js": ["jquery-3.6.0.js", "worker.js"],
-        "css": ["filter.css"],
-        "run_at": "document_idle"
+        "css": ["filter.css"]
       }
     ],
+    "background": {
+      "service_worker": "background.js"
+    },
     "permissions": [
-      "activeTab"
-    ],
-    "host_permissions": [
-      "https://www.selver.ee/cart"
+      "tabs"
     ]
 }
