@@ -5,23 +5,34 @@ function runCartFilter (htmlentity) {
         for (i=0; i<htmlentity.length; i++) {
             out_array.push(htmlentity[i].href)
         }
-        $.post({
-            url: 'http://127.0.0.1:5000/',
-            data: JSON.stringify({
-                'urls': out_array,
-                'forbidden': ['sinep']
-            }, null, '\t'),
-            contentType: 'application/json',
-            success: function(result) {
-                for ([key, value] of Object.entries(result)) {
-                    if (value.length > 0 && htmlentity[key] != undefined) {
-                        htmlentity[key].parentNode.classList.add("extension-blocked")
+        chrome.storage.sync.get(['blocked'], function (blocked) {
+            $.post({
+                url: 'http://127.0.0.1:5000/',
+                data: JSON.stringify({
+                    'urls': out_array,
+                    'forbidden': blocked.blocked
+                }, null, '\t'),
+                contentType: 'application/json',
+                success: function(result) {
+                    for ([key, value] of Object.entries(result)) {
+                        if (htmlentity[key] != undefined) {
+                            let classes = htmlentity[key].parentNode.classList
+
+                            if (value.length > 0) {
+                                classes.add("extension-blocked")
+                            }
+                            else if (value.length == 0) {
+                                classes.remove("extension-blocked")
+                            }
+                        }
                     }
                 }
-            }
+            })
         })
     }
 }
+
+chrome.storage.sync.onChanged.addListener(function () {cartWrapper()})
 
 chrome.runtime.onMessage.addListener(
     function(request) {
@@ -36,7 +47,7 @@ a = []
   
 
 function cartWrapper (nm) {
-    var func = setInterval(  //lol ma otsisin miks see loopib 24/7 ja see oli selle parast et mai pannud var
+    var func = setInterval(
         function () {
             a.push(func);
             console.log(nm);
