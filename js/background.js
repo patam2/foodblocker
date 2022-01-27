@@ -1,4 +1,3 @@
-
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     if (changeInfo.status == 'complete') {
         if (tab.url.endsWith('/cart') && tab.url.startsWith('https://www.selver.ee/')) {

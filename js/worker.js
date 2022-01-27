@@ -17,7 +17,6 @@ function runCartFilter (htmlentity) {
                     for ([key, value] of Object.entries(result)) {
                         if (htmlentity[key] != undefined) {
                             let classes = htmlentity[key].parentNode.classList
-
                             if (value.length > 0) {
                                 classes.add("extension-blocked")
                             }

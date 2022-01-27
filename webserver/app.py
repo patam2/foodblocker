@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
+import time
+
 
 MONGODB_IP = '127.0.0.1'
 MONGODB_PORT = 27017 #TODO: env
@@ -10,6 +12,7 @@ flask_client = Flask(__name__)
 
 @flask_client.route('/', methods=['POST'])
 def landing(): #POST {'urls':[''], 'forbidden': ['']}
+    t = time.time()
     out = {}
 
     for enum, url in enumerate(request.json['urls']):
@@ -23,8 +26,9 @@ def landing(): #POST {'urls':[''], 'forbidden': ['']}
                     or ingredient in result['allergens']):
                 out[enum].append(ingredient)
 
-    print(out)
+    #print(out)
     resp = jsonify(out)
+    print(f'Request finished in {time.time()-t:.3f}s')
     return resp
 
 @flask_client.after_request

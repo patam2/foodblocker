@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function (  ) {
                 chrome.storage.sync.set({blocked: current_list})
 
                 row = (`<tr><td id=item>${inpvalue}</td><td><button>X</button></td></tr>`)
-
+                input_box.val('')
                 $('tbody').append(row)
             })
         } 
