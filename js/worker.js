@@ -65,7 +65,6 @@ function productWrapper ( ) {
     let func = setInterval(
         function() {
             len = document.getElementsByClassName('AttributeAccordion__content')
-            console.log(len)
             if (len.length > 0) {
                 runProductFilter(len)
                 clearInterval(func)
