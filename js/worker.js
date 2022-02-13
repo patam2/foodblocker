@@ -45,19 +45,39 @@ function cartWrapper () {
 }
 
 
-function runProductFilter ( incredients ) {
-    let koostised_allergeenid = "";
-    for (var i=0; i<incredients.length; i++ ) {
-        var content = incredients[i].innerHTML.toLowerCase()
-        if (content.search('(toode)*( )*(võib)+( )*(sisaldada)*') != -1) {
-            koostised_allergeenid += (' ', content.split('võib')[0])
+function runProductFilter ( ) {
+    //get koostis
+    let koostisosad = $(".AttributeAccordion:contains('Koostis')");
+    if (koostisosad.length > 0) {
+        var koostised_allergeenid = koostisosad.find('.Accordion__content').html().toLowerCase();
+        if (koostised_allergeenid.search('(toode)+( )*(võib)') != -1 || koostised_allergeenid.search('(võib)+( )*(sisaldada)') != -1) {
+            koostised_allergeenid = koostised_allergeenid.split('võib')[0];
+        }    
+    }
+
+    let allergeenid = $(".AttributeAccordion:contains('Allergeenid')")
+    if (allergeenid.length > 0) {
+        allergeenid = allergeenid.find('.Accordion__content').html().toLowerCase();
+        if (allergeenid.search('(toode)+( )*(võib)') != -1 || allergeenid.search('(võib)+( )*(sisaldada)') != -1) {
+            koostised_allergeenid += allergeenid.split('võib')[0];
         }
         else {
-            //check for headimng
+            koostised_allergeenid += allergeenid
         }
     }
-    // kui ei ole voib sisaldada
-    console.log(koostised_allergeenid)
+    
+    //filter against unwished ingrs.
+    chrome.storage.sync.get(['blocked'], function(result) {
+        var blocked_ingredients = []
+        result.blocked.forEach(element => {
+            if (koostised_allergeenid.includes(element)) {
+                blocked_ingredients.push(element)
+            }
+        })
+        if (blocked_ingredients.length > 0) {
+            alert('Sisaldab järgmiseid: ' + blocked_ingredients.join(', '))
+        }
+    })
 }
 
 
@@ -66,7 +86,7 @@ function productWrapper ( ) {
         function() {
             len = document.getElementsByClassName('AttributeAccordion__content')
             if (len.length > 0) {
-                runProductFilter(len)
+                runProductFilter()
                 clearInterval(func)
             }
         },
@@ -78,7 +98,6 @@ chrome.storage.sync.onChanged.addListener(function () {cartWrapper()})
 
 chrome.runtime.onMessage.addListener(
     function(request) {
-        console.log(request)
         if (request.page == 'cart') {
             cartWrapper()
         }
