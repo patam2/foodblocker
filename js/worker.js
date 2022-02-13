@@ -31,20 +31,6 @@ function runCartFilter (htmlentity) {
     }
 }
 
-function cartWrapper () {
-    var func = setInterval(
-        function () {
-            len = document.getElementsByClassName('Product__image-wrapper');
-            if (len.length > 0) {
-                runCartFilter(len);
-                clearInterval(func);
-            }
-        },
-        100
-    )
-}
-
-
 function runProductFilter ( ) {
     //get koostis
     let koostisosad = $(".AttributeAccordion:contains('Koostis')");
@@ -75,18 +61,50 @@ function runProductFilter ( ) {
             }
         })
         if (blocked_ingredients.length > 0) {
-            alert('Sisaldab järgmiseid: ' + blocked_ingredients.join(', '))
+            console.log('Sisaldab järgmiseid: ' + blocked_ingredients.join(', '))
         }
     })
 }
 
 
-function productWrapper ( ) {
+function runGridFilter ( ) {
+    var blocked = [];
+    $('.ProductCard__link').each(function (cardlink) {
+        console.log(cardlink)
+    })
+} 
+
+
+function cartWrapper () {
+    var func = setInterval(
+        function () {
+            len = document.getElementsByClassName('Product__image-wrapper');
+            if (len.length > 0) {
+                runCartFilter(len);
+                clearInterval(func);
+            }
+        },
+        100
+    )
+}
+async function productWrapper ( ) {
     let func = setInterval(
         function() {
             len = document.getElementsByClassName('AttributeAccordion__content')
             if (len.length > 0) {
                 runProductFilter()
+                clearInterval(func)
+            }
+        },
+        100
+    )
+}
+async function gridWrapper ( ) {
+    let func = setInterval(
+        function() {
+            len = document.getElementsByClassName('ProductListing')
+            if (len.length > 0) {
+                runGridFilter()
                 clearInterval(func)
             }
         },
@@ -99,12 +117,11 @@ chrome.storage.sync.onChanged.addListener(function () {cartWrapper()})
 chrome.runtime.onMessage.addListener(
     function(request) {
         if (request.page == 'cart') {
-            cartWrapper()
+            cartWrapper();
         }
         if (request.page == 'product') {
-            productWrapper()
+            productWrapper();
+            gridWrapper();
         }
     }
 );
-
-a = []

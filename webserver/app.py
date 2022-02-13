@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from pymongo import MongoClient
 import time
 
@@ -9,8 +11,10 @@ MONGODB_PORT = 27017 #TODO: env
 mongo_client = MongoClient(host=MONGODB_IP, port=MONGODB_PORT).filter.selver_products
 flask_client = Flask(__name__)
 
+limiter = Limiter(flask_client, key_func=get_remote_address) #avoid double page loads
 
 @flask_client.route('/', methods=['POST'])
+@limiter.limit("1/s")
 def landing(): #POST {'urls':[''], 'forbidden': ['']}
     t = time.time()
     out = {}
