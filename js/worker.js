@@ -67,10 +67,34 @@ function runProductFilter ( ) {
 }
 
 
-function runGridFilter ( ) {
-    var blocked = [];
-    $('.ProductCard__link').each(function (cardlink) {
-        console.log(cardlink)
+function runGridFilter ( htmlelements ) {
+    var items = new Set()
+
+    link_list = $('.ProductCard__image-wrapper')
+    link_list.each(function () {
+        items.add($( this ).parent().attr('href').replace('/', ''))
+    })
+
+    chrome.storage.sync.get(['blocked'], function (blocked) {
+        $.post({
+            url: 'http://127.0.0.1:5000/',
+            data: JSON.stringify({
+                'urls': Array.from(items),
+                'forbidden': blocked.blocked
+            }, null, '\t'),
+            contentType: 'application/json',
+            success: function(result) {
+                for ([key, value] of Object.entries(result)) {
+                    classes = link_list[key].parentNode.parentNode.classList //Get classes of every 2nd node
+                    if (value.length == 1) {
+                        classes.add("extension-blocked")
+                    }
+                    else if (value.length > 1) {
+                        classes.remove("extension-blocked")
+                    }
+                }
+            }
+        })
     })
 } 
 
