@@ -3,7 +3,6 @@ import os
 from pymongo import MongoClient
 from epoe_moodulid import selver
 
-
 MONGODB_PORT = 27017  # TODO: env
 
 selver_client = selver.Selver()

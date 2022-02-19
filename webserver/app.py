@@ -37,4 +37,5 @@ def apply_headers(response):
     response.headers['Access-Control-Allow-Headers'] = '*'
     return response
 
-flask_client.run()
+if __name__ == "__main__":
+    flask_client.run()
