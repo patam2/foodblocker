@@ -1,13 +1,13 @@
 import re
+import os
 from pymongo import MongoClient
 from epoe_moodulid import selver
 
 
-MONGODB_IP = "127.0.0.1"
 MONGODB_PORT = 27017  # TODO: env
 
 selver_client = selver.Selver()
-mongo_client = MongoClient(host=MONGODB_IP, port=MONGODB_PORT)
+mongo_client = MongoClient(host=os.environ.get('MONGODB_IP'), port=MONGODB_PORT)
 selver_db = mongo_client["filter"]["selver_products"]
 
 
@@ -38,4 +38,4 @@ for cat_id, cat_name in selver_client.get_product_categories().items():
 
             selver_db.update_one({'url_path': gathered_incrediens[enum]['url_path']}, {"$set": gathered_incrediens[enum]}, upsert=True)
     except Exception as E:
-        print(E, gathered_incrediens, 'Returned error', cat_id, cat_name)
+        print(E)
