@@ -61,7 +61,7 @@ function runProductFilter ( ) {
             }
         })
         if (blocked_ingredients.length > 0) {
-            console.log('Sisaldab järgmiseid: ' + blocked_ingredients.join(', '))
+            alert('Sisaldab järgmiseid: ' + blocked_ingredients.join(', '))
         }
     })
 }
@@ -86,11 +86,8 @@ function runGridFilter ( htmlelements ) {
             success: function(result) {
                 for ([key, value] of Object.entries(result)) {
                     classes = link_list[key].parentNode.parentNode.classList //Get classes of every 2nd node
-                    if (value.length == 1) {
+                    if (value.length > 0) {
                         classes.add("extension-blocked")
-                    }
-                    else if (value.length > 1) {
-                        classes.remove("extension-blocked")
                     }
                 }
             }
@@ -143,7 +140,7 @@ chrome.runtime.onMessage.addListener(
         if (request.page == 'cart') {
             cartWrapper();
         }
-        if (request.page == 'product') {
+        if (request.page == 'product' || request.page == 'search') {
             productWrapper();
             gridWrapper();
         }
