@@ -1,0 +1,2 @@
+# Selver.ee toiduainete blokeerija
+
