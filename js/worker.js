@@ -1,3 +1,5 @@
+var webp = ''
+
 
 function runCartFilter (htmlentity) {
     let out_array = []
@@ -133,16 +135,21 @@ async function gridWrapper ( ) {
     )
 }
 
-chrome.storage.sync.onChanged.addListener(function () {cartWrapper()})
+function get_mode() {
+    if (webp == 'cart') {
+        cartWrapper();
+    }
+    else if (webp == 'product' || webp == 'search') {
+        productWrapper();
+        gridWrapper();
+    }
+} 
+
+chrome.storage.sync.onChanged.addListener(function () {get_mode()})
 
 chrome.runtime.onMessage.addListener(
     function(request) {
-        if (request.page == 'cart') {
-            cartWrapper();
-        }
-        if (request.page == 'product' || request.page == 'search') {
-            productWrapper();
-            gridWrapper();
-        }
+        webp = request.page
+        get_mode()
     }
 );
