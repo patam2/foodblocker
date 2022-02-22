@@ -1,5 +1,5 @@
 var webp = ''
-
+var running = false
 
 function runCartFilter (htmlentity) {
     let out_array = []
@@ -135,6 +135,11 @@ async function gridWrapper ( ) {
     )
 }
 
+function avoidDuplicateEvents() {
+    running = true
+    setTimeout(function () {running=false}, 1000)
+}
+
 function get_mode() {
     if (webp == 'cart') {
         cartWrapper();
@@ -150,6 +155,9 @@ chrome.storage.sync.onChanged.addListener(function () {get_mode()})
 chrome.runtime.onMessage.addListener(
     function(request) {
         webp = request.page
-        get_mode()
+        if (!running) {
+            avoidDuplicateEvents()
+            get_mode()
+        }
     }
 );
