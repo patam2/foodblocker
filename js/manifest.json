@@ -1,11 +1,11 @@
 {
     "name": "Toidublokeerija",
-    "description": "Base Level Extension",
-    "version": "1.0",
+    "description": "Selver.ee toidu filtreerija.",
+    "version": "0.0.0.1",
     "manifest_version": 3,
     "action": {
       "default_popup": "/settings/index.html",
-      "default_icon": "icon"
+      "default_icon": "icon.png"
     },
     "content_scripts": [
       {
@@ -19,5 +19,8 @@
     },
     "permissions": [
       "tabs", "storage"
+    ],
+    "host_permissions": [
+      "https://melro5e.com/"
     ]
 }

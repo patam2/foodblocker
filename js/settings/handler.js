@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function (  ) {
     // Laeb blokeeritud asjad
     chrome.storage.sync.get(['blocked'], function(result) {
         if (result != undefined) {
-            current_list = result.blocked
+            result.blocked ? current_list = result.blocked : current_list = [];
             result.blocked.forEach(element => {
                 $('tbody').append(`<tr><td id=item>${element}</td><td><button>X</button></td></tr>`)
             });    
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function (  ) {
     input_box.keydown(function (keyevent) {
         if (keyevent.keyCode === 13) {
             chrome.storage.sync.get(['blocked'], function (result) {
-                current_list = result.blocked
+                result.blocked ? current_list = result.blocked : current_list = [];
                 let inpvalue = input_box.val()
                 current_list.push(inpvalue)
                 chrome.storage.sync.set({blocked: current_list})

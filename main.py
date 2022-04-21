@@ -15,12 +15,5 @@ def data_thread():
         subprocess.run(['py', '-3.9', scrape_file])
         time.sleep(5*60)
 
-#Lastly, run flask
-def flask_runner():
-    os.chdir(os.path.join(os.path.dirname(__file__), 'webserver'))
-    subprocess.Popen(['waitress-serve', '--listen=127.0.0.1:5000', 'app:flask_client'])
 
-
-threading.Thread(target=mongo_runner).start()
 threading.Thread(target=data_thread).start()
-threading.Thread(target=flask_runner).start()

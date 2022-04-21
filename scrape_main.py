@@ -6,7 +6,7 @@ from epoe_moodulid import selver
 MONGODB_PORT = 27017  # TODO: env
 
 selver_client = selver.Selver()
-mongo_client = MongoClient(host=os.environ.get('MONGODB_IP'), port=MONGODB_PORT)
+mongo_client = MongoClient('206.81.21.245', port=MONGODB_PORT)
 selver_db = mongo_client["filter"]["selver_products"]
 
 
@@ -24,7 +24,6 @@ def format_ingrediens(raw: str) -> list:
 for cat_id, cat_name in selver_client.get_product_categories().items():
     try:
         gathered_incrediens = selver_client.get_incrediens_by_category(cat_id, output=[])
-
         if gathered_incrediens == []:
             continue
         for enum, incredient in enumerate(gathered_incrediens):
