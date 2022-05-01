@@ -9,7 +9,7 @@ selver_client = selver.Selver()
 mongo_client = MongoClient('206.81.21.245', port=MONGODB_PORT)
 selver_db = mongo_client["filter"]["selver_products"]
 
-
+ 
 def format_ingrediens(raw: str) -> list:
     """
     Eemaldab ebavajalised stringid, võib sisaldada, jne.
