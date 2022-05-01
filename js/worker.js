@@ -9,7 +9,7 @@ function runCartFilter (htmlentity) {
         }
         chrome.storage.sync.get(['blocked'], function (blocked) {
             $.post({
-                url: 'https://melro5e.com/',
+                url: 'https://foodblocker.melro5e.com/',
                 data: JSON.stringify({
                     'urls': out_array,
                     'forbidden': blocked.blocked
@@ -79,7 +79,7 @@ function runGridFilter ( htmlelements ) {
 
     chrome.storage.sync.get(['blocked'], function (blocked) {
         $.post({
-            url: 'https://melro5e.com/',
+            url: 'https://foodblocker.melro5e.com/',
             data: JSON.stringify({
                 'urls': Array.from(items),
                 'forbidden': blocked.blocked
