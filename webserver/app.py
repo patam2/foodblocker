@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, render_template, request, jsonify
 from pymongo import MongoClient
 import time
 
@@ -11,25 +11,28 @@ flask_client = Flask(__name__)
 
 
 
-@flask_client.route('/', methods=['POST'])
+@flask_client.route('/', methods=['GET', 'POST'])
 def landing(): #POST {'urls':[''], 'forbidden': ['']}
-    t = time.time()
-    out = {}
+    if request.method == 'POST':
+        t = time.time()
+        out = {}
 
-    for enum, url in enumerate(request.json['urls']):
-        if url.startswith('https'):
-            url = url.split('/')[-1]
+        for enum, url in enumerate(request.json['urls']):
+            if url.startswith('https'):
+                url = url.split('/')[-1]
 
-        out[enum] = []
-        result = mongo_client.find_one({'url_path': url})
-        for ingredient in request.json['forbidden']:
-            if (ingredient in result['ingrediens'] 
-                    or ingredient in result['allergens']):
-                out[enum].append(ingredient)
-    #print(out)
-    resp = jsonify(out)
-    print(f'Request finished in {time.time()-t:.3f}s')
-    return resp
+            out[enum] = []
+            result = mongo_client.find_one({'url_path': url})
+            for ingredient in request.json['forbidden']:
+                if (ingredient in result['ingrediens'] 
+                        or ingredient in result['allergens']):
+                    out[enum].append(ingredient)
+        #print(out)
+        resp = jsonify(out)
+        print(f'Request finished in {time.time()-t:.3f}s')
+        return resp
+    else:
+        return render_template('hello.html')
 
 @flask_client.after_request
 def apply_headers(response):
