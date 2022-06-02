@@ -52,13 +52,15 @@ class Selver:
         hits = req["hits"]["total"]["value"]
 
         for raw_product_data in req["hits"]["hits"]:
+            #print(raw_product_data)
             to_add = {"allergens": "", "ingrediens": ""}
             to_add["url_path"] = raw_product_data["_source"]["url_path"]
             if "product_ingrediens" in raw_product_data["_source"]:
                 to_add["ingrediens"] = raw_product_data["_source"][
                     "product_ingrediens"
                 ].lower()
-            if "product_allergens" in raw_product_data["_source"]:
+            if raw_product_data["_source"]['product_allergens']:
+                print(raw_product_data['_source'])
                 to_add["allergens"] = raw_product_data["_source"][
                     "product_allergens"
                 ].lower()

@@ -22,18 +22,16 @@ def format_ingrediens(raw: str) -> list:
 
 
 for cat_id, cat_name in selver_client.get_product_categories().items():
-    try:
-        gathered_incrediens = selver_client.get_incrediens_by_category(cat_id, output=[])
-        if gathered_incrediens == []:
-            continue
-        for enum, incredient in enumerate(gathered_incrediens):
-            gathered_incrediens[enum]["ingrediens"] = format_ingrediens(
-                incredient["ingrediens"]
-            )
-            gathered_incrediens[enum]["allergens"] = format_ingrediens(
-                incredient["allergens"]
-            )
+    gathered_incrediens = selver_client.get_incrediens_by_category(cat_id, output=[])
+    if gathered_incrediens == []:
+        continue
+    for enum, incredient in enumerate(gathered_incrediens):
+        gathered_incrediens[enum]["ingrediens"] = format_ingrediens(
+            incredient["ingrediens"]
+        )
+        gathered_incrediens[enum]["allergens"] = format_ingrediens(
+            incredient["allergens"]
+        )
 
-            selver_db.update_one({'url_path': gathered_incrediens[enum]['url_path']}, {"$set": gathered_incrediens[enum]}, upsert=True)
-    except Exception as E:
-        print(E)
+        selver_db.update_one({'url_path': gathered_incrediens[enum]['url_path']}, {"$set": gathered_incrediens[enum]}, upsert=True)
+    print('Updated')
