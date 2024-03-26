@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function (  ) {
         }
     });
 
-    // Asjade lisamine funtksionaalsus
+    // Asjade lisamine funktsionaalsus
     var input_box = $('#In')
     input_box.keydown(function (keyevent) {
         if (keyevent.keyCode === 13) {
